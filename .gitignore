@@ -108,8 +108,9 @@ dist
 .yarn/build-state.yml
 .yarn/cache
 
-# Local statuses
+# Local statuses/config
 src/config/statuses.ts
+src/config.ts
 
 # Data files (e.g. archive files and per-user/server config files)
 data/

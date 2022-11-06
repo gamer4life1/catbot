@@ -30,7 +30,6 @@ export async function run(msg: Message, language: string, args: string[]) {
 				},
 			],
 		});
-		// todo: test reaction menus
 	} catch (err) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)

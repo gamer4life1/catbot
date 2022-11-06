@@ -18,7 +18,8 @@ export async function run(msg: Message, language: string, args: string[]) {
 		switch (args[0]) {
 			case "-p":
 				await msg.channel?.sendMessage("pulling changes...");
-				exec("git pull");
+				exec("git pull && yarn install"); // install new deps if they're specified
+				break;
 			case "-s":
 				if (!args[1]) {
 					return msg.channel?.sendMessage(

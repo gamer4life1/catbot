@@ -111,5 +111,5 @@ dist
 # Local statuses
 src/config/statuses.ts
 
-# Archive files
-archives/
+# Data files (e.g. archive files and per-user/server config files)
+data/

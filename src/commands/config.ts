@@ -4,8 +4,8 @@ import { globalStrings } from "../i18n/en_GB";
 
 import { getLanguage } from "../modules/functions.js";
 
-export const name = "ping";
-export const aliases = ["pong"];
+export const name = "config";
+export const aliases = ["conf", "settings"];
 export const description = globalStrings.ping.description;
 export const developer = false;
 export const serverOnly = false;

@@ -1,4 +1,4 @@
-import { Message } from "revolt.js/dist/maps/Messages";
+import { Message } from "revolt.js";
 
 export interface Command {
 	name: string;
@@ -7,7 +7,7 @@ export interface Command {
 	usage: string | null;
 	developer: boolean;
 	serverOnly: boolean;
-	run: (msg: Message, args: string[]) => Promise<void>;
+	run: (msg: Message, language: string, args: string[]) => Promise<void>;
 }
 
 export interface Context {

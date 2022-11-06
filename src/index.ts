@@ -9,16 +9,10 @@ class RexBot extends Client {
 
 	constructor(...args: undefined[]) {
 		super({ apiURL: process.env.API_URL ?? "https://api.revolt.chat" });
-		this.framework = new BotFramework(
-			this,
-			config.developers,
-			config.prefix
-		);
+		this.framework = new BotFramework(this, config.prefix);
 	}
 }
 
 let rexbotClient = new RexBot();
 
 rexbotClient.loginBot(process.env.TOKEN!);
-
-export { rexbotClient as extClient };

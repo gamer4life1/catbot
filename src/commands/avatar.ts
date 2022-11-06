@@ -1,10 +1,10 @@
-import { Message } from "revolt.js/dist/maps/Messages";
+import { Message } from "revolt.js";
 
-import { strings } from "../i18n/en_GB";
+import { globalStrings } from "../i18n/en_GB";
 
 export const name = "avatar";
 export const aliases = ["av"];
-export const description = strings.avatar.description;
+export const description = globalStrings.avatar.description;
 export const developer = false;
 export const serverOnly = false;
 
@@ -23,12 +23,11 @@ export async function run(msg: Message) {
 		content: `[**Link**](<${avatarUrl}>)`,
 		embeds: [
 			{
-				type: "Text",
 				title: "RexBot",
 				description: `**${
 					mentionedUser ? `${mentionedUser.username}'s` : "Your"
 				} avatar**`,
-				colour: strings.embeds.accent,
+				colour: globalStrings.embeds.accent,
 				// media: avatarUrl,
 			},
 		],

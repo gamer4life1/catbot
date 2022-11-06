@@ -1,64 +1,149 @@
-import { Client } from "revolt.js";
+import { Client, Message } from "revolt.js";
 import { commands } from "./commands.js";
 import { statuses } from "../config/statuses.js";
-import { strings } from "../i18n/en_GB.js";
-import { isValidContext } from "./functions.js";
+import { globalStrings } from "../i18n/en_GB.js";
+import { getServerConfig, getUserConfig, isValidContext } from "./functions.js";
+import dayjs from "dayjs";
+import { ulid } from "ulid";
 
 export class BotFramework {
 	client: Client;
-	developers: string[];
 	prefix: string;
 	commands = commands;
 
-	constructor(client: Client, developers: string[], prefix: string) {
+	constructor(client: Client, prefix: string) {
 		this.client = client;
-		this.developers = developers;
 		this.prefix = prefix;
 
 		this.client.on("connecting", async () => {
-			console.info("[client] Connecting...");
+			const timestamp = new Date().getTime();
+			const time = dayjs(timestamp).toISOString();
+			console.info(`[${time}] [client] Connecting...`);
 		});
 		this.client.on("connected", async () => {
-			console.info("[client] Connected!");
+			const timestamp = new Date().getTime();
+			const time = dayjs(timestamp).toISOString();
+			console.info(`[${time}] [client] Connected!`);
 		});
 		this.client.on("ready", async () => {
 			const id = client.user!._id;
+			const timestamp = new Date().getTime();
+			const time = dayjs(timestamp).toISOString();
 			console.info(
-				`[client] Logged in as ${client.user!.username} (${id})!`
+				`[${time}] [client] Logged in as ${
+					client.user!.username
+				} (${id})!`
 			);
+
+			let servers = "Other servers:\n";
+			let knownServersMsg = "Known servers:\n";
+
+			for (const server of client.servers) {
+				const firstChannel =
+					server[1].orderedChannels[0].channels[0] ??
+					server[1].orderedChannels[1].channels[0];
+				const msg = `${server[1].name} (${server[1]._id}) (first channel: ${firstChannel?.name} (${firstChannel?._id}))\n`;
+				const isKnown = (await getServerConfig(server[1]._id))?.known;
+
+				isKnown ? (knownServersMsg += msg) : (servers += msg);
+
+				// testing irt a particular server
+
+				// if (server[1]._id === "01G5PV87HA6S5ETE5QV41CDB4Y") {
+				// 	console.log("Channels in 01G5PV87HA6S5ETE5QV41CDB4Y");
+				// 	for (const channel of server[1].channels) {
+				// 		console.log(
+				// 			`${channel?.name} (${
+				// 				channel?._id
+				// 			}) - last message: "${
+				// 				channel?.last_message_id
+				// 					? (
+				// 							await channel?.fetchMessage(
+				// 								channel?.last_message_id
+				// 							)
+				// 					  ).content
+				// 					: "none"
+				// 			}"`
+				// 		);
+				// 	}
+				// }
+
+				// example code - send a message to every known server; will probably be reused/tweaked for an announcements system
+
+				// if (isKnown) {
+				// 	try {
+				// 		if (firstChannel.havePermission("SendMessage")) {
+				// 			firstChannel?.sendMessage("testing");
+				// 		}
+				// 	} catch (e) {
+				// 		null; // banish error to the void
+				// 	}
+				// }
+			}
+			console.log(`${knownServersMsg}\n${servers}`);
 
 			// change the bot's status every 10 minutes
 			setInterval(async () => {
 				const index =
 					Math.floor(Math.random() * statuses.length + 1) - 1;
-				// @ts-expect-error - the route type definitions don't like `/users/@me`
-				await client.req("PATCH", `/users/@me`, {
+				await client.api.patch(`/users/@me`, {
+					// @ts-expect-error typing mismatch that shouldn't cause any issues
 					status: statuses[index],
 				});
 			}, 300000);
 		});
 
 		this.client.on("dropped", async () => {
-			console.log("[client] Dropped!");
+			const timestamp = new Date().getTime();
+			const time = dayjs(timestamp).toISOString();
+			console.log(`[${time}] [client] Dropped!`);
 		});
 
-		this.client.on("message", async (msg) => {
+		this.client.on("message", async (msg: Message) => {
 			try {
-				if (!msg.author || msg.author.bot) return;
+				const botids = process.env.ALLOWEDBOTS?.split(",");
+				if (
+					!msg.author ||
+					(msg.author.bot && !botids?.includes(msg.author._id))
+				)
+					return;
 
-				const context = isValidContext(msg, this);
+				// get user config (language, dev status, and in future log anonymity)
+				const userConf = await getUserConfig(msg.author._id);
+
+				const language = userConf?.language ?? "en_GB";
+				const isDev = userConf?.developer ?? false;
+
+				// check if the user has the right perms/whether the command can run in dms/servers
+				const context = isValidContext(msg, isDev, this);
 				if (!context.command || !context.canExecute) return;
 
+				// log command usage
+				const timestamp = new Date().getTime();
+				const usageID = ulid();
+
+				const time = dayjs(timestamp).toISOString();
 				console.info(
-					`[command used] ${msg.author?.username} (${msg.author_id}) in channel #${msg.channel?.name} (${msg.channel_id}) of server ${msg.channel?.server?.name} (${msg.channel?.server_id}) - ` +
+					`[${time}] [command used - ${usageID}] ${msg.author?.username} (${msg.author_id}) in channel #${msg.channel?.name} (${msg.channel_id}) of server ${msg.channel?.server?.name} (${msg.channel?.server_id}) - ` +
 						`${msg.content}`
 				);
-				context.command.run(msg, context.args);
+
+				// check if the bot can send messages in the channel
+				const hasSendMessages =
+					msg.channel?.havePermission("SendMessage");
+				if (hasSendMessages) {
+					context.command.run(msg, language, context.args);
+				} else {
+					console.log(
+						`[warning] failed command attempt (${usageID}) in channel without send perms (${msg.channel?._id})`
+					);
+				}
 			} catch (exc) {
 				try {
 					await msg.channel?.sendMessage(
-						strings.errors.genericErrorWithTrace(exc)
+						globalStrings.errors.genericErrorWithTrace(exc)
 					);
+					console.log(exc);
 				} catch {
 					console.log(exc);
 				}

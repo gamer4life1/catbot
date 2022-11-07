@@ -22,10 +22,12 @@ export async function run(msg: Message, language: string, args: string[]) {
 			embeds: [
 				{
 					title: (localStrings ?? globalStrings).ping.pong,
-					description: (
+					description: `${(
 						localStrings?.ping.embedDescription ??
 						globalStrings.ping.embedDescription
-					)(botMsg.createdAt - msg.createdAt),
+					)(
+						botMsg.createdAt - msg.createdAt
+					)}\n\n**Extra info**\nHost: \`${process.env.HOST}\``,
 					colour: globalStrings.embeds.accent,
 				},
 			],

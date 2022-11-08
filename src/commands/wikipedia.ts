@@ -1,5 +1,8 @@
 import { Message } from "revolt.js";
+
 import { globalStrings } from "../i18n/en_GB";
+
+import { handleError } from "../modules/functions";
 
 export const name = "wikipedia";
 export const aliases = ["wiki", "wp", "wikisearch"];
@@ -97,5 +100,6 @@ export async function run(msg: Message, language: string, args: string[]) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)
 		);
+		handleError(msg, err, "error");
 	}
 }

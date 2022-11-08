@@ -2,6 +2,8 @@ import { Message } from "revolt.js";
 
 import { globalStrings } from "../i18n/en_GB";
 
+import { handleError } from "../modules/functions";
+
 import dayjs from "dayjs";
 
 export const name = "splatoon";
@@ -109,6 +111,6 @@ export async function run(msg: Message, language: string, args: string[]) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)
 		);
-		console.log(err);
+		handleError(msg, err, "error");
 	}
 }

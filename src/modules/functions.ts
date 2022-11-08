@@ -8,6 +8,30 @@ import { readFile, writeFile } from "fs/promises";
 import path from "path";
 import type { ServerConfig, UserConfig } from "../types/config";
 
+export async function handleError(
+	msg: Message, // needed for the client
+	error: any,
+	type: "warning" | "error"
+) {
+	const loggingChannelId = process.env.LOGGING_CHANNEL ?? null;
+	if (!loggingChannelId) {
+		return console.log(error);
+	}
+	const loggingChannel = await msg.client.channels.fetch(loggingChannelId);
+	if (!loggingChannel) {
+		return console.log(error);
+	}
+	try {
+		return loggingChannel.sendMessage(
+			`**New ${
+				type === "error" ? "error :bangbang:" : "warning :warning:"
+			}**\n\`\`\`\n${error}\n\`\`\``
+		);
+	} catch {
+		return console.log(error);
+	}
+}
+
 export function isValidContext(
 	msg: Message,
 	isDev: boolean,

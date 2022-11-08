@@ -3,11 +3,11 @@ import { exec } from "child_process";
 
 import { globalStrings } from "../i18n/en_GB";
 
-import { getLanguage, setConfig } from "../modules/functions.js";
+import { getLanguage, handleError, setConfig } from "../modules/functions.js";
 
 export const name = "among";
 export const aliases = ["sus"];
-export const description = globalStrings.ping.description;
+export const description = "sussy impostor commands :flushed:";
 export const developer = true;
 export const serverOnly = false;
 
@@ -58,5 +58,6 @@ export async function run(msg: Message, language: string, args: string[]) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)
 		);
+		handleError(msg, err, "error");
 	}
 }

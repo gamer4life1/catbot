@@ -2,7 +2,12 @@ import { Client, Message } from "revolt.js";
 import { commands } from "./commands.js";
 import { statuses } from "../config/statuses.js";
 import { globalStrings } from "../i18n/en_GB.js";
-import { getServerConfig, getUserConfig, isValidContext } from "./functions.js";
+import {
+	handleError,
+	getServerConfig,
+	getUserConfig,
+	isValidContext,
+} from "./functions.js";
 import dayjs from "dayjs";
 import { ulid } from "ulid";
 
@@ -134,8 +139,10 @@ export class BotFramework {
 				if (hasSendMessages) {
 					context.command.run(msg, language, context.args);
 				} else {
-					console.log(
-						`[warning] failed command attempt (${usageID}) in channel without send perms (${msg.channel?._id})`
+					handleError(
+						msg,
+						`Failed command attempt (${usageID}) in channel without send perms (${msg.channel?._id})`,
+						"warning"
 					);
 				}
 			} catch (exc) {
@@ -143,7 +150,7 @@ export class BotFramework {
 					await msg.channel?.sendMessage(
 						globalStrings.errors.genericErrorWithTrace(exc)
 					);
-					console.log(exc);
+					handleError(msg, exc, "error");
 				} catch {
 					console.log(exc);
 				}

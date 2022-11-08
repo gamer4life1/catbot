@@ -2,7 +2,7 @@ import { Message } from "revolt.js";
 
 import { globalStrings } from "../i18n/en_GB"; // `const { strings } = await import(langName);` for proper i18n support?
 
-import { getUserConfig } from "../modules/functions.js";
+import { getUserConfig, handleError } from "../modules/functions.js";
 
 export const name = "privacy";
 export const aliases = ["data"];
@@ -27,11 +27,12 @@ export async function run(msg: Message, language: string, args: string[]) {
 		}
 		const config = await getValues();
 		msg.channel
-			?.sendMessage(`*For the purposes of this message, "we" refers to RexBot's operator(s) - I (Rexo) am currently the only operator.*
+			?.sendMessage(`*For the purposes of this message, "we" refers to RexBot's operator(s) - I (Rexo) and the bot's host (Error) are the only current operators.*
 	\nWe care about your privacy and only store data that is necessary for the bot to function.
 	\n### Logging
 	\n- To track command usage and to help catch and fix bugs, the bot logs whenever you use a command. These logs follow the following format: \`[timestamp] [command used] Username (user ID) in channel #channel-name (channel id) of server Server Name (server ID) - rex!cmd args\`
 	\n- These logs are non-permanent, and in future we may switch to some sort of command usage dashboard (reducing the necessity of these logs), add consistent log clearing and the ability to opt out of this logging in some way.
+	\n- Errors/warnings are separately logged to a private channel in the Rexovolt server, only visible to those with the Developer role and the bot.
 	\n### Archive files
 	\nArchive files (produced by running \`rex!archive\`) are stored for a maximum of 30 minutes before being deleted - this is to ensure that, if the bot fails to send the archive file, it can still be retrieved for the archiver. We do not look at the contents of archive files.
 	\n### COMING SOON: User config
@@ -46,10 +47,10 @@ export async function run(msg: Message, language: string, args: string[]) {
 			  }`
 			: "You can view your config info by passing the `viewconfig` arg."
 	}`);
-		// todo: is there a more elegant way of getting every config value?
 	} catch (err) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)
 		);
+		handleError(msg, err, "error");
 	}
 }

@@ -1,6 +1,8 @@
 import { Message } from "revolt.js";
 
-import { globalStrings } from "../i18n/en_GB"; // `const { strings } = await import(langName);` for proper i18n support?
+import { globalStrings } from "../i18n/en_GB";
+
+import { handleError } from "../modules/functions";
 
 // node builtins
 import { writeFile, readFile, unlink } from "fs/promises";
@@ -82,5 +84,6 @@ export async function run(msg: Message, language: string, args: string[]) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)
 		);
+		handleError(msg, err, "error");
 	}
 }

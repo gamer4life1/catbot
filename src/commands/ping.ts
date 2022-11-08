@@ -2,7 +2,7 @@ import { Message } from "revolt.js";
 
 import { globalStrings } from "../i18n/en_GB";
 
-import { getLanguage } from "../modules/functions.js";
+import { getLanguage, handleError } from "../modules/functions.js";
 
 export const name = "ping";
 export const aliases = ["pong"];
@@ -36,5 +36,6 @@ export async function run(msg: Message, language: string, args: string[]) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)
 		);
+		handleError(msg, err, "error");
 	}
 }

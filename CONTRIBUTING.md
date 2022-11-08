@@ -11,7 +11,7 @@ import { Message } from "revolt.js";
 
 import { globalStrings } from "../i18n/en_GB";
 
-import { getLanguage } from "../modules/functions.js";
+import { handleError, getLanguage } from "../modules/functions.js";
 
 export const name = "commandname";
 export const aliases = ["list", "any", "aliases", "here"];
@@ -27,6 +27,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)
 		);
+		handleError(msg, err, "error");
 	}
 }
 ```

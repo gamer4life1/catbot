@@ -1,9 +1,14 @@
 import { Message } from "revolt.js";
 
+import { globalStrings } from "../i18n/en_GB.js";
+
 import { Command } from "../types/command.js";
 import { config } from "../config.js";
-import { getCommand, getUserConfig } from "../modules/functions.js";
-import { globalStrings } from "../i18n/en_GB.js";
+import {
+	getCommand,
+	getUserConfig,
+	handleError,
+} from "../modules/functions.js";
 
 export const name = "help";
 export const aliases = ["h"];
@@ -57,5 +62,6 @@ export async function run(msg: Message, language: string, args: string[]) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)
 		);
+		handleError(msg, err, "error");
 	}
 }

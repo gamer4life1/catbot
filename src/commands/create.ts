@@ -1,5 +1,8 @@
 import { Message } from "revolt.js";
+
 import { globalStrings } from "../i18n/en_GB";
+
+import { handleError } from "../modules/functions";
 
 export const name = "create";
 export const aliases = ["channel", "newchannel"];
@@ -82,5 +85,6 @@ export async function run(msg: Message, args: string[]) {
 		msg.channel?.sendMessage(
 			globalStrings.errors.genericErrorWithTrace(err)
 		);
+		handleError(msg, err, "error");
 	}
 }

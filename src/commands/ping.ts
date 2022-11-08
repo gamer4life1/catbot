@@ -4,6 +4,10 @@ import { globalStrings } from "../i18n/en_GB";
 
 import { getLanguage, handleError } from "../modules/functions.js";
 
+import path from "path";
+
+import git from "git-rev-sync";
+
 export const name = "ping";
 export const aliases = ["pong"];
 export const description = globalStrings.ping.description;
@@ -27,7 +31,9 @@ export async function run(msg: Message, language: string, args: string[]) {
 						globalStrings.ping.embedDescription
 					)(
 						botMsg.createdAt - msg.createdAt
-					)}\n\n**Extra info**\nHost: \`${process.env.HOST}\``,
+					)}\n\n**Extra info**\nHost: \`${
+						process.env.HOST
+					}\`\nGit commit: \`${git.short(path.resolve())}\``,
 					colour: globalStrings.embeds.accent,
 				},
 			],

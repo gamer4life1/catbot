@@ -6,8 +6,8 @@ import { getLanguage, handleError } from "../modules/functions.js";
 
 export const name = "config";
 export const aliases = ["conf", "settings"];
-export const description = globalStrings.ping.description;
-export const developer = false;
+export const description = "[WIP] View, edit or clear your saved config.";
+export const developer = true;
 export const serverOnly = false;
 
 export async function run(msg: Message, language: string, args: string[]) {

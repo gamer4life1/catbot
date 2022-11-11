@@ -4,11 +4,11 @@ import { statuses } from "../config/statuses.js";
 import { globalStrings } from "../i18n/en_GB.js";
 import {
 	handleError,
+	generateTimestamp,
 	getServerConfig,
 	getUserConfig,
 	isValidContext,
 } from "./functions.js";
-import dayjs from "dayjs";
 import { ulid } from "ulid";
 
 export class BotFramework {
@@ -21,87 +21,69 @@ export class BotFramework {
 		this.prefix = prefix;
 
 		this.client.on("connecting", async () => {
-			const timestamp = new Date().getTime();
-			const time = dayjs(timestamp).toISOString();
-			console.info(`[${time}] [client] Connecting...`);
+			console.info(`[${generateTimestamp()}] [client] Connecting...`);
 		});
 		this.client.on("connected", async () => {
-			const timestamp = new Date().getTime();
-			const time = dayjs(timestamp).toISOString();
-			console.info(`[${time}] [client] Connected!`);
+			console.info(`[${generateTimestamp()}] [client] Connected!`);
 		});
 		this.client.on("ready", async () => {
-			const id = client.user!._id;
-			const timestamp = new Date().getTime();
-			const time = dayjs(timestamp).toISOString();
-			console.info(
-				`[${time}] [client] Logged in as ${
-					client.user!.username
-				} (${id})!`
-			);
+			try {
+				const id = client.user!._id;
+				console.info(
+					`[${generateTimestamp()}] [client] Logged in as ${
+						client.user!.username
+					} (${id})!`
+				);
 
-			let servers = "Other servers:\n";
-			let knownServersMsg = "Known servers:\n";
+				let servers = "Other servers:\n";
+				let knownServersMsg = "Known servers:\n";
 
-			for (const server of client.servers) {
-				const firstChannel =
-					server[1].orderedChannels[0].channels[0] ??
-					server[1].orderedChannels[1].channels[0];
-				const msg = `${server[1].name} (${server[1]._id}) (first channel: ${firstChannel?.name} (${firstChannel?._id}))\n`;
-				const isKnown = (await getServerConfig(server[1]._id))?.known;
+				for (const server of client.servers) {
+					const firstChannel =
+						server[1].orderedChannels[0].channels[0] ??
+						server[1].orderedChannels[1].channels[0];
+					const msg = `${server[1].name} (${server[1]._id}) (first channel: ${firstChannel?.name} (${firstChannel?._id}))\n`;
+					const isKnown = (await getServerConfig(server[1]._id))
+						?.known;
 
-				isKnown ? (knownServersMsg += msg) : (servers += msg);
+					isKnown ? (knownServersMsg += msg) : (servers += msg);
 
-				// testing irt a particular server
+					// example code - send a message to every known server; will probably be reused/tweaked for an announcements system
 
-				// if (server[1]._id === "01G5PV87HA6S5ETE5QV41CDB4Y") {
-				// 	console.log("Channels in 01G5PV87HA6S5ETE5QV41CDB4Y");
-				// 	for (const channel of server[1].channels) {
-				// 		console.log(
-				// 			`${channel?.name} (${
-				// 				channel?._id
-				// 			}) - last message: "${
-				// 				channel?.last_message_id
-				// 					? (
-				// 							await channel?.fetchMessage(
-				// 								channel?.last_message_id
-				// 							)
-				// 					  ).content
-				// 					: "none"
-				// 			}"`
-				// 		);
-				// 	}
-				// }
+					// if (isKnown) {
+					// 	try {
+					// 		if (firstChannel.havePermission("SendMessage")) {
+					// 			firstChannel?.sendMessage("testing");
+					// 		}
+					// 	} catch (e) {
+					// 		null; // banish error to the void
+					// 	}
+					// }
+				}
+				console.log(`${knownServersMsg}\n${servers}`);
 
-				// example code - send a message to every known server; will probably be reused/tweaked for an announcements system
-
-				// if (isKnown) {
-				// 	try {
-				// 		if (firstChannel.havePermission("SendMessage")) {
-				// 			firstChannel?.sendMessage("testing");
-				// 		}
-				// 	} catch (e) {
-				// 		null; // banish error to the void
-				// 	}
-				// }
+				// change the bot's status every 10 minutes
+				setInterval(async () => {
+					try {
+						const index =
+							Math.floor(Math.random() * statuses.length + 1) - 1;
+						await client.api.patch(`/users/@me`, {
+							// @ts-expect-error typing mismatch that shouldn't cause any issues
+							status: statuses[index],
+						});
+					} catch (err) {
+						console.log(`[]`);
+					}
+				}, 300000);
+			} catch (err) {
+				console.log(
+					`Something went wrong trying to connect to Revolt:\n${err}`
+				);
 			}
-			console.log(`${knownServersMsg}\n${servers}`);
-
-			// change the bot's status every 10 minutes
-			setInterval(async () => {
-				const index =
-					Math.floor(Math.random() * statuses.length + 1) - 1;
-				await client.api.patch(`/users/@me`, {
-					// @ts-expect-error typing mismatch that shouldn't cause any issues
-					status: statuses[index],
-				});
-			}, 300000);
 		});
 
 		this.client.on("dropped", async () => {
-			const timestamp = new Date().getTime();
-			const time = dayjs(timestamp).toISOString();
-			console.log(`[${time}] [client] Dropped!`);
+			console.log(`[${generateTimestamp()}] [client] Dropped!`);
 		});
 
 		this.client.on("message", async (msg: Message) => {
@@ -124,13 +106,16 @@ export class BotFramework {
 				if (!context.command || !context.canExecute) return;
 
 				// log command usage
-				const timestamp = new Date().getTime();
 				const usageID = ulid();
 
-				const time = dayjs(timestamp).toISOString();
 				console.info(
-					`[${time}] [command used - ${usageID}] ${msg.author?.username} (${msg.author_id}) in channel #${msg.channel?.name} (${msg.channel_id}) of server ${msg.channel?.server?.name} (${msg.channel?.server_id}) - ` +
-						`${msg.content}`
+					`[${generateTimestamp()}] [command used - ${usageID}] ${
+						msg.author?.username
+					} (${msg.author_id}) in channel #${msg.channel?.name} (${
+						msg.channel_id
+					}) of server ${msg.channel?.server?.name} (${
+						msg.channel?.server_id
+					}) - ` + `${msg.content}`
 				);
 
 				// check if the bot can send messages in the channel
@@ -141,7 +126,9 @@ export class BotFramework {
 				} else {
 					handleError(
 						msg,
-						`Failed command attempt (${usageID}) in channel without send perms (${msg.channel?._id})`,
+						`[${generateTimestamp()}] Failed command attempt (${usageID}) in channel without send perms (${
+							msg.channel?._id
+						})`,
 						"warning"
 					);
 				}

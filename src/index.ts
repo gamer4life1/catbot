@@ -15,4 +15,8 @@ class RexBot extends Client {
 
 let rexbotClient = new RexBot();
 
-rexbotClient.loginBot(process.env.TOKEN!);
+try {
+	rexbotClient.loginBot(process.env.TOKEN!);
+} catch (err) {
+	console.log("Failed to log in!");
+}

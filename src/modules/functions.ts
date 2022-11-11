@@ -1,12 +1,22 @@
 import { Message } from "revolt.js";
+
 import { Command, Context } from "../types/command";
+
 import { globalStrings } from "../i18n/en_GB";
+
+import type { ServerConfig, UserConfig } from "../types/config";
 import { BotFramework } from "./framework";
+
+// external libs
+import dayjs from "dayjs";
 
 // node builtins
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
-import type { ServerConfig, UserConfig } from "../types/config";
+
+export function generateTimestamp() {
+	return dayjs(new Date().getTime()).toISOString();
+}
 
 export async function handleError(
 	msg: Message, // needed for the client

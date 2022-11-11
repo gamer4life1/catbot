@@ -1,3 +1,5 @@
+import { generateTimestamp } from "./functions";
+
 import fs from "fs";
 import dayjs from "dayjs";
 
@@ -10,14 +12,16 @@ for (const file of commandsFiles) {
 	)
 		continue;
 	const fileName = file.split(".");
-	const timestamp = new Date().getTime();
-	const time = dayjs(timestamp).toISOString();
 	try {
 		commandsLoad.push(await import(`../commands/${fileName[0]}.ts`));
-		console.log(`[${time}] [commands] Loaded command file ${file}!`);
+		console.log(
+			`[${generateTimestamp()}] [commands] Loaded command file ${file}!`
+		);
 	} catch (error) {
 		commandsLoad.push(await import(`../commands/${fileName[0]}.js`));
-		console.log(`[${time}] [commands] Loaded command file ${file}!`);
+		console.log(
+			`[${generateTimestamp()}] [commands] Loaded command file ${file}!`
+		);
 	}
 }
 

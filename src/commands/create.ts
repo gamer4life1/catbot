@@ -11,7 +11,7 @@ export const usage = "create <text|voice> <name> [description]";
 export const developer = false;
 export const serverOnly = true;
 
-export async function run(msg: Message, args: string[]) {
+export async function run(msg: Message, language: string, args: string[]) {
 	try {
 		// initial checks
 		if (!args[0])
@@ -29,7 +29,8 @@ export async function run(msg: Message, args: string[]) {
 		// arg checks
 		const typeLower = args[0].toLowerCase();
 		const type = typeLower.charAt(0).toUpperCase() + typeLower.slice(1);
-		if (type !== ("Text" || "Voice"))
+		console.log(args[0], typeLower, type);
+		if (type !== "Text" && type !== "Voice")
 			return msg.channel?.sendMessage({
 				embeds: [
 					{

@@ -72,7 +72,9 @@ export class BotFramework {
 							status: statuses[index],
 						});
 					} catch (err) {
-						console.log(`[]`);
+						console.log(
+							`[${generateTimestamp()}] [client] Failed to change status:\n${err}`
+						);
 					}
 				}, 300000);
 			} catch (err) {

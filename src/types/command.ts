@@ -7,6 +7,7 @@ export interface Command {
 	usage: string | null;
 	developer: boolean;
 	serverOnly: boolean;
+	attributes: {};
 	run: (msg: Message, language: string, args: string[]) => Promise<void>;
 }
 

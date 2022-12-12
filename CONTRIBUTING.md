@@ -19,6 +19,7 @@ export const description =
 	"Describe what the command does. Used for the help command.";
 export const developer = false;
 export const serverOnly = false;
+export const attributes = {};
 
 export async function run(msg: Message, language: string, args: string[]) {
 	try {

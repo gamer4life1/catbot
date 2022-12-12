@@ -12,6 +12,11 @@ export const description =
 	"See which stages/modes are currently playable in Splatoon 3. *This data is kindly provided by [splatoon3.ink](<https://splatoon3.ink>).*";
 export const developer = false;
 export const serverOnly = false;
+export const attributes = {
+	aliases: ["splat3"],
+	developer: false,
+	serverOnly: false,
+}; // for future use :eyes:
 
 export async function run(msg: Message, language: string, args: string[]) {
 	try {
@@ -50,6 +55,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 			// base objects (including start/end times)
 			const turfWarBase = data.regularSchedules.nodes[0]; // regular battle (turf war)
 			const rankedBase = data.bankaraSchedules.nodes[0]; // anarchy battle (both open and series)
+			const xBase = data.xSchedules.nodes[0]; // x battle
 			const festBase = data.festSchedules.nodes[0]; // splatfest schedules
 
 			// check if there's a splatfest
@@ -65,17 +71,21 @@ export async function run(msg: Message, language: string, args: string[]) {
 			const rankedStagesSeries = ongoingSplatfest
 				? null
 				: rankedBase.bankaraMatchSettings[0].vsStages;
+			const xStages = ongoingSplatfest
+				? null
+				: xBase.xMatchSetting.vsStages;
 			const festStages = ongoingSplatfest
 				? festBase.festMatchSetting?.vsStages
 				: null;
 
-			// modes (for anarchy battle)
+			// modes (for anarchy/x battle)
 			const rankedModeOpen = ongoingSplatfest
 				? null
 				: rankedBase.bankaraMatchSettings[1].vsRule;
 			const rankedModeSeries = ongoingSplatfest
 				? null
 				: rankedBase.bankaraMatchSettings[0].vsRule;
+			const xMode = ongoingSplatfest ? null : xBase.xMatchSetting.vsRule;
 
 			// get the relevant emoji
 			const regularBattleEmoji = ":01GDBXA053N10EBQ3FR5ADDBXW:";
@@ -85,6 +95,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 			const rankedSeriesEmoji = ongoingSplatfest
 				? null
 				: getModeIcon(rankedModeSeries.rule);
+			const xEmoji = ongoingSplatfest ? null : getModeIcon(xMode.rule);
 
 			// generate timestamp from end time
 			const timestamp = dayjs(turfWarBase.endTime).unix(); // rotations happen at the same time for regular/anarchy battles
@@ -97,7 +108,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 						description: `The following modes/stages will be playable until <t:${timestamp}>:\n\n${
 							ongoingSplatfest
 								? `**Splatfest (*${data.currentFest.title}*) - Turf War**\n${festStages[0].name}, ${festStages[1].name}`
-								: `**Regular Battle - Turf War ${regularBattleEmoji}**\n${turfWarStages[0].name}, ${turfWarStages[1].name}\n\n**Anarchy Battle (Open) - ${rankedModeOpen.name} ${rankedOpenEmoji}**\n${rankedStagesOpen[0].name}, ${rankedStagesOpen[1].name}\n\n**Anarchy Battle (Series) - ${rankedModeSeries.name} ${rankedSeriesEmoji}**\n${rankedStagesSeries[0].name}, ${rankedStagesSeries[1].name}`
+								: `**Regular Battle - Turf War ${regularBattleEmoji}**\n${turfWarStages[0].name}, ${turfWarStages[1].name}\n\n**Anarchy Battle (Open) - ${rankedModeOpen.name} ${rankedOpenEmoji}**\n${rankedStagesOpen[0].name}, ${rankedStagesOpen[1].name}\n\n**Anarchy Battle (Series) - ${rankedModeSeries.name} ${rankedSeriesEmoji}**\n${rankedStagesSeries[0].name}, ${rankedStagesSeries[1].name}\n\n**X Battle (Series) - ${xMode.name} ${xEmoji}**\n${xStages[0].name}, ${xStages[1].name}`
 						}\n\n*This data is kindly provided by [splatoon3.ink](<https://splatoon3.ink>).*`,
 						url: globalStrings.splatoon.url,
 						colour: globalStrings.embeds.accent,

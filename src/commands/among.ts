@@ -4,6 +4,8 @@ import { exec } from "child_process";
 import { globalStrings } from "../i18n/en_GB";
 
 import { getLanguage, handleError, setConfig } from "../modules/functions.js";
+import path from "path";
+import { readdir, unlink } from "fs/promises";
 
 export const name = "among";
 export const aliases = ["sus"];
@@ -29,6 +31,18 @@ export async function run(msg: Message, language: string, args: string[]) {
 				const message = args.slice(1).join(" ");
 				return msg.channel?.sendMessage(message);
 				break;
+			case "-ca":
+				msg.channel?.sendMessage("cleaning up archive files...");
+				const __dirname = path.resolve();
+				const folder = path.resolve(__dirname, "data/archives");
+				const files = await readdir(folder);
+				for (const file of files) {
+					console.log(`${folder}/${file}`);
+					await unlink(`${folder}/${file}`);
+				}
+				return msg.channel?.sendMessage(
+					"cleaned up archive files :tada:"
+				);
 			case "-c":
 				if (!args[1]) {
 					return msg.channel?.sendMessage(

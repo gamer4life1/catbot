@@ -67,9 +67,9 @@ export class BotFramework {
 					try {
 						const index =
 							Math.floor(Math.random() * statuses.length + 1) - 1;
+						const newStatus = statuses[index];
 						await client.api.patch(`/users/@me`, {
-							// @ts-expect-error typing mismatch that shouldn't cause any issues
-							status: statuses[index],
+							status: newStatus,
 						});
 					} catch (err) {
 						console.log(

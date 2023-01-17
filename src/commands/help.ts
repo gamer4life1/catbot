@@ -1,5 +1,7 @@
 import { Message } from "revolt.js";
 
+import { RBMessage } from "../types/client.js";
+
 import { globalStrings } from "../i18n/en_GB.js";
 
 import { Command } from "../types/command.js";
@@ -18,7 +20,7 @@ export const usage = "help [command]";
 export const developer = false;
 export const serverOnly = false;
 
-export async function run(msg: Message, language: string, args: string[]) {
+export async function run(msg: RBMessage, language: string, args: string[]) {
 	try {
 		const input = args.join(" ");
 		const userConfig = await getUserConfig(msg.author?._id!);
@@ -27,7 +29,6 @@ export async function run(msg: Message, language: string, args: string[]) {
 		let content = "";
 		let colour = "var(--accent)";
 		if (!input) {
-			// @ts-ignore - whilst this code works, `framework` is not in the Client object's types
 			for (const cmd of msg.client.framework.commands) {
 				if (cmd.developer && !authorIsDev) continue;
 				content += `**${cmd.name}**\n${
@@ -37,7 +38,6 @@ export async function run(msg: Message, language: string, args: string[]) {
 			content +=
 				"*You can view the bot's privacy policy by running rex!privacy.*";
 		} else {
-			// @ts-ignore - see above
 			const cmd: Command = getCommand(input, msg.client.framework);
 			if (!cmd) {
 				colour = "var(--error)";

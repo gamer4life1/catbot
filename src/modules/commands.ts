@@ -1,7 +1,6 @@
 import { generateTimestamp } from "./functions";
 
 import fs from "fs";
-import dayjs from "dayjs";
 
 const commandsFiles = fs.readdirSync("./src/commands"); // todo: make this work with both src and dist
 let commandsLoad = [];

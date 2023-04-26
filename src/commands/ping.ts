@@ -19,13 +19,13 @@ export async function run(msg: Message, language: string, args: string[]) {
 		const localStrings =
 			language !== "en_GB" ? await getLanguage(msg.author?._id!) : null;
 		const botMsg = await msg.channel?.sendMessage(
-			(localStrings ?? globalStrings).ping.pong
+			localStrings?.ping.pong ?? globalStrings.ping.pong
 		);
 		botMsg?.edit({
 			content: " ",
 			embeds: [
 				{
-					title: (localStrings ?? globalStrings).ping.pong,
+					title: localStrings?.ping.pong ?? globalStrings.ping.pong,
 					description: `${(
 						localStrings?.ping.embedDescription ??
 						globalStrings.ping.embedDescription

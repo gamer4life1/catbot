@@ -5,6 +5,13 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@iarna/toml@npm:^2.2.5":
+  version: 2.2.5
+  resolution: "@iarna/toml@npm:2.2.5"
+  checksum: b63b2b2c4fd67969a6291543ada0303d45593801ee744b60f5390f183c03d9192bc67a217abb24be945158f1935f02840d9ffff40c0142aa171b5d3b6b6a3ea5
+  languageName: node
+  linkType: hard
+
 "@insertish/exponential-backoff@npm:3.1.0-patch.2":
   version: 3.1.0-patch.2
   resolution: "@insertish/exponential-backoff@npm:3.1.0-patch.2"
@@ -43,6 +50,15 @@ __metadata:
   version: 2.0.0
   resolution: "@types/git-rev-sync@npm:2.0.0"
   checksum: db70d3a58577cfc67431954f00af8fed4f38a1754872624998ffe6b524208c6491c278063ca2cbd08247e3b194bc74c6c85ec3e0e19a1aa8d1de987b50ad122c
+  languageName: node
+  linkType: hard
+
+"@types/iarna__toml@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@types/iarna__toml@npm:2.0.2"
+  dependencies:
+    "@types/node": "*"
+  checksum: 43bb44e4e241f16cf6b4352328e4221dbc77893ed1c854ccc62f028a2ad7565a4499d5cdc8a98ef2456c3bf392b40191e2f796ca89abfe8d1e1444a7b9b983a6
   languageName: node
   linkType: hard
 
@@ -137,6 +153,15 @@ __metadata:
   dependencies:
     delayed-stream: ~1.0.0
   checksum: 49fa4aeb4916567e33ea81d088f6584749fc90c7abec76fd516bf1c5aa5c79f3584b5ba3de6b86d26ddd64bae5329c4c7479343250cfe71c75bb366eae53bb7c
+  languageName: node
+  linkType: hard
+
+"commonjs-extension-resolution-loader@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "commonjs-extension-resolution-loader@npm:0.1.0"
+  dependencies:
+    resolve: ^1.22.1
+  checksum: 07338c852cf24ab19a037e19e8151c8b7d7327d4c9ecc1b5d795713d3a309629632bcdadc31339245a97697db091a0f0d31575941dda171489544b9a93bdb2f8
   languageName: node
   linkType: hard
 
@@ -537,7 +562,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.1.6":
+"resolve@npm:^1.1.6, resolve@npm:^1.22.1":
   version: 1.22.1
   resolution: "resolve@npm:1.22.1"
   dependencies:
@@ -550,7 +575,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@^1.1.6#~builtin<compat/resolve>":
+"resolve@patch:resolve@^1.1.6#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.1#~builtin<compat/resolve>":
   version: 1.22.1
   resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=07638b"
   dependencies:
@@ -609,10 +634,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "rexbot@workspace:."
   dependencies:
+    "@iarna/toml": ^2.2.5
     "@types/git-rev-sync": ^2.0.0
+    "@types/iarna__toml": ^2.0.2
     "@types/node": ^18.11.18
     "@types/ws": ^8.5.4
     axios: ^1.2.2
+    commonjs-extension-resolution-loader: ^0.1.0
     dayjs: ^1.11.7
     dotenv: ^16.0.3
     form-data: ^4.0.0

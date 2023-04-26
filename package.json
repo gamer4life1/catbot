@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"watch": "tsc-watch",
-		"dev": "tsc-watch --onSuccess \"node --experimental-specifier-resolution=node dist\"",
+		"dev": "tsc-watch --onSuccess \"node --loader=commonjs-extension-resolution-loader dist\"",
 		"build": "tsc"
 	},
 	"repository": {
@@ -24,7 +24,9 @@
 	},
 	"homepage": "https://github.com/Rexogamer/rexbot#readme",
 	"dependencies": {
+		"@iarna/toml": "^2.2.5",
 		"axios": "^1.2.2",
+		"commonjs-extension-resolution-loader": "^0.1.0",
 		"dayjs": "^1.11.7",
 		"form-data": "^4.0.0",
 		"git-rev-sync": "^3.0.2",
@@ -34,6 +36,7 @@
 	},
 	"devDependencies": {
 		"@types/git-rev-sync": "^2.0.0",
+		"@types/iarna__toml": "^2.0.2",
 		"@types/node": "^18.11.18",
 		"@types/ws": "^8.5.4",
 		"dotenv": "^16.0.3",

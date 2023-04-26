@@ -117,7 +117,7 @@ export class BotFramework {
 						msg.channel_id
 					}) of server ${msg.channel?.server?.name} (${
 						msg.channel?.server_id
-					}) - ` + `${msg.content}`
+					}) - ${msg.content}`
 				);
 
 				// check if the bot can send messages in the channel

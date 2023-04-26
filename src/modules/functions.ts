@@ -1,4 +1,4 @@
-import { Message } from "revolt.js";
+import { Client, Message } from "revolt.js";
 
 import { Command, Context } from "../types/command";
 
@@ -9,6 +9,8 @@ import { BotFramework } from "./framework";
 
 // external libs
 import dayjs from "dayjs";
+import axios from "axios";
+import FormData from "form-data";
 
 // node builtins
 import { readFile, writeFile } from "fs/promises";
@@ -201,3 +203,33 @@ export async function getLanguage(id: string): Promise<any | null> {
 		return null;
 	}
 }
+
+/**
+ * Uploads the provided Buffer to Autumn
+ * @param client The Client object, used to get the Autumn URL
+ * @param file The Buffer to upload
+ * @param filename The file name the file will be uploaded with
+ */
+export async function uploadFile(
+	client: Client,
+	file: Buffer,
+	filename: string
+): Promise<string> {
+	const autumnURL = client.configuration?.features.autumn.url;
+
+	let data = new FormData();
+	data.append("file", file, { filename: filename });
+
+	const headers = data.getHeaders();
+	let req = await axios.post(`${autumnURL}/attachments`, data, {
+		headers: headers,
+	});
+	return (req.data as any)["id"] as string;
+}
+
+/**
+ * Wait for the given amount of time before doing anything else
+ * @param ms The amount of time to wait for (in milliseconds)
+ */
+export const sleep = (ms: number | undefined) =>
+	new Promise((r) => setTimeout(r, ms));

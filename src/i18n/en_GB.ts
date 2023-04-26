@@ -57,6 +57,15 @@ export const globalStrings = {
 		userAgent:
 			"RexBot/1.0 (https://github.com/rexogamer/rexbot, Rexowogamer#1183)",
 	},
+	theme: {
+		description:
+			"Prepare your custom theme for submission to Revolt's [Theme Store](<https://github.com/revoltchat/themes>).",
+		converting: "Converting...",
+		preparingFile: "Preparing file...",
+		themeReady: (filename: string) => {
+			return `Your theme file is ready! The file should appear below shortly. If not, ask Rexo to give you a copy [in RexBot's support server](<https://rvlt.gg/ra9dr2Rd>) - mention that the file name is \`${filename}\`.\n\nHere's a basic overview of the next steps - if you need any help, feel free to ask in the Revolt Lounge's Themes channel:\n* Rename the file to \`Preset.toml\` and save it in a folder with the same name as the slug\n* Fork [the Theme Store repo](<https://github.com/revoltchat/themes>), clone it locally and upload your local folder under the \`data\` folder (for example, \`data/turquoise-theme\` containing your \`Preset.toml\` file)\n* Push your changes and open a pull request`;
+		},
+	},
 	wikipedia: {
 		noExtract:
 			"*No extract available - feel free to take a look at the page using the links below*",

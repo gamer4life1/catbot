@@ -11,6 +11,12 @@ import { BotFramework } from "./framework";
 import dayjs from "dayjs";
 import axios from "axios";
 import FormData from "form-data";
+import Polyglot from "node-polyglot";
+
+const polyglot = new Polyglot({
+	phrases: globalStrings,
+	interpolation: { prefix: "{{", suffix: "}}" },
+});
 
 // node builtins
 import { readFile, writeFile } from "fs/promises";
@@ -44,11 +50,12 @@ export async function handleError(
 	}
 }
 
-export function isValidContext(
+export async function isValidContext(
 	msg: Message,
 	isDev: boolean,
+	language: string,
 	bot: BotFramework
-): Context {
+): Promise<Context> {
 	let values: Context = { command: null, args: [], canExecute: false };
 
 	// ignore system messages
@@ -59,7 +66,11 @@ export function isValidContext(
 
 	const botPinged = prefixMention.test(msg.content);
 	if (botPinged)
-		msg.channel?.sendMessage(globalStrings.help.pingPrefix(bot.prefix));
+		translate(language, "help.pingPrefix", { prefix: bot.prefix }).then(
+			(string) => {
+				msg.channel?.sendMessage(string);
+			}
+		);
 
 	if (!msg.content.startsWith(bot.prefix)) return values;
 
@@ -71,23 +82,28 @@ export function isValidContext(
 
 	if (!command) return values;
 
-	const issues = commandChecks(msg, command, isDev, bot);
+	const issues = await commandChecks(msg, command, isDev, language, bot);
 
 	if (!issues) values.canExecute = true;
 	return values;
 }
 
-export function commandChecks(
+export async function commandChecks(
 	msg: Message,
 	command: Command,
 	isDev: boolean,
+	language: string,
 	bot: BotFramework
 ) {
 	if (command.developer && !isDev) {
-		msg.channel?.sendMessage(globalStrings.errors.devOnlyCommand);
+		msg.channel?.sendMessage(
+			await translate(language, "errors.devOnlyCommand")
+		);
 		return true;
 	} else if (command.serverOnly && !msg.channel?.server) {
-		msg.channel?.sendMessage(globalStrings.errors.serverOnlyCommand);
+		msg.channel?.sendMessage(
+			await translate(language, "errors.serverOnlyCommand")
+		);
 		return true;
 	} else return false;
 }
@@ -189,18 +205,52 @@ export async function getServerConfig(
 }
 
 /**
- * Fetches the provided user's language and its strings
+ * Fetches the provided language or the provided user's language and its strings
  */
-export async function getLanguage(id: string): Promise<any | null> {
+async function getLanguage(
+	id: string,
+	isLanguage?: boolean
+): Promise<any | null> {
 	try {
 		const config = await getUserConfig(id);
-		const rawData = config
+		const rawData = isLanguage
+			? await import(`../i18n/${id}`)
+			: config
 			? await import(`../i18n/${config?.language}`)
 			: null;
 		const object = rawData.strings;
 		return object;
 	} catch (err) {
 		return null;
+	}
+}
+
+/**
+ * Fetch the translated version of the given string
+ * @param language The local language to use
+ * @param string The string to translate
+ * @param data Extra data used for template strings
+ */
+export async function translate(
+	language: string,
+	string: string,
+	data?: any
+): Promise<string> {
+	try {
+		const localStrings =
+			language === "en_GB" ? null : await getLanguage(language, true);
+
+		// clean up each time in case the user switches languages
+		polyglot.replace(globalStrings);
+		if (localStrings) {
+			polyglot.extend(localStrings);
+		}
+
+		const s = polyglot.t(string, data);
+		console.log(s);
+		return s;
+	} catch (err) {
+		return " ";
 	}
 }
 

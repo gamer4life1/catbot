@@ -2,7 +2,7 @@ import { Message } from "revolt.js";
 
 import { globalStrings } from "../i18n/en_GB";
 
-import { getLanguage, handleError } from "../modules/functions.js";
+import { handleError, translate } from "../modules/functions.js";
 
 import path from "path";
 
@@ -16,31 +16,34 @@ export const serverOnly = false;
 
 export async function run(msg: Message, language: string, args: string[]) {
 	try {
-		const localStrings =
-			language !== "en_GB" ? await getLanguage(msg.author?._id!) : null;
 		const botMsg = await msg.channel?.sendMessage(
-			localStrings?.ping.pong ?? globalStrings.ping.pong
+			await translate(language, "ping.pong")
 		);
+		const description = `${await translate(
+			language,
+			"ping.embedDescription",
+			{
+				time: botMsg!.createdAt - msg.createdAt,
+				host: process.env.HOST,
+				commit: git.short(path.resolve()),
+			}
+		)}`;
+
 		botMsg?.edit({
 			content: " ",
 			embeds: [
 				{
-					title: localStrings?.ping.pong ?? globalStrings.ping.pong,
-					description: `${(
-						localStrings?.ping.embedDescription ??
-						globalStrings.ping.embedDescription
-					)(
-						botMsg.createdAt - msg.createdAt
-					)}\n\n**Extra info**\nHost: \`${
-						process.env.HOST
-					}\`\nGit commit: \`${git.short(path.resolve())}\``,
+					title: await translate(language, "ping.pong"),
+					description: description,
 					colour: globalStrings.embeds.accent,
 				},
 			],
 		});
 	} catch (err) {
 		msg.channel?.sendMessage(
-			globalStrings.errors.genericErrorWithTrace(err)
+			await translate(language, "errors.genericErrorWithTrace", {
+				error: err,
+			})
 		);
 		handleError(msg, err, "error");
 	}

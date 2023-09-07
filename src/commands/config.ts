@@ -2,7 +2,7 @@ import { Message } from "revolt.js";
 
 import { globalStrings } from "../i18n/en_GB";
 
-import { getLanguage, handleError } from "../modules/functions.js";
+import { handleError, translate } from "../modules/functions.js";
 
 export const name = "config";
 export const aliases = ["conf", "settings"];
@@ -12,28 +12,28 @@ export const serverOnly = false;
 
 export async function run(msg: Message, language: string, args: string[]) {
 	try {
-		const localStrings =
-			language !== "en_GB" ? await getLanguage(msg.author?._id!) : null;
 		const botMsg = await msg.channel?.sendMessage(
-			(localStrings ?? globalStrings).ping.pong
+			await translate(language, "ping.pong")
 		);
 		botMsg?.edit({
-			content: " ",
+			content: "",
 			embeds: [
 				{
-					title: (localStrings ?? globalStrings).ping.pong,
-					description: (
-						localStrings?.ping.embedDescription ??
-						globalStrings.ping.embedDescription
-					)(botMsg.createdAt - msg.createdAt),
+					title: await translate(language, "ping.pong"),
+					description: `${await translate(
+						language,
+						"ping.embedDescription",
+						{ time: botMsg.createdAt - msg.createdAt }
+					)}`,
 					colour: globalStrings.embeds.accent,
 				},
 			],
 		});
-		// todo: test reaction menus
 	} catch (err) {
 		msg.channel?.sendMessage(
-			globalStrings.errors.genericErrorWithTrace(err)
+			await translate(language, "errors.genericErrorWithTrace", {
+				error: err,
+			})
 		);
 		handleError(msg, err, "error");
 	}

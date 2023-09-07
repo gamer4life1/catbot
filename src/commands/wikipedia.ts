@@ -2,7 +2,7 @@ import { Message } from "revolt.js";
 
 import { globalStrings } from "../i18n/en_GB";
 
-import { handleError } from "../modules/functions";
+import { handleError, translate } from "../modules/functions";
 
 export const name = "wikipedia";
 export const aliases = ["wiki", "wp", "wikisearch"];
@@ -48,10 +48,11 @@ export async function run(msg: Message, language: string, args: string[]) {
 							embeds: [
 								{
 									title: "Article not found",
-									description:
-										globalStrings.wikipedia.cannotFindArticle(
-											input
-										),
+									description: await translate(
+										language,
+										"wikipedia.cannotFindArticle",
+										{ input: input }
+									),
 									colour: "var(--error)",
 								},
 							],
@@ -92,13 +93,17 @@ export async function run(msg: Message, language: string, args: string[]) {
 				}
 			} catch (error) {
 				msg.channel?.sendMessage(
-					globalStrings.errors.genericErrorWithTrace(error)
+					await translate(language, "errors.genericErrorWithTrace", {
+						error: error,
+					})
 				);
 			}
 		}
 	} catch (err) {
 		msg.channel?.sendMessage(
-			globalStrings.errors.genericErrorWithTrace(err)
+			await translate(language, "errors.genericErrorWithTrace", {
+				error: err,
+			})
 		);
 		handleError(msg, err, "error");
 	}

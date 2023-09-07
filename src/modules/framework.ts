@@ -1,4 +1,5 @@
 import { Client, Message } from "revolt.js";
+
 import { commands } from "./commands.js";
 import { statuses } from "../config/statuses.js";
 import { globalStrings } from "../i18n/en_GB.js";
@@ -8,7 +9,9 @@ import {
 	getServerConfig,
 	getUserConfig,
 	isValidContext,
+	translate,
 } from "./functions.js";
+
 import { ulid } from "ulid";
 
 export class BotFramework {
@@ -104,7 +107,12 @@ export class BotFramework {
 				const isDev = userConf?.developer ?? false;
 
 				// check if the user has the right perms/whether the command can run in dms/servers
-				const context = isValidContext(msg, isDev, this);
+				const context = await isValidContext(
+					msg,
+					isDev,
+					language,
+					this
+				);
 				if (!context.command || !context.canExecute) return;
 
 				// log command usage
@@ -137,7 +145,13 @@ export class BotFramework {
 			} catch (exc) {
 				try {
 					await msg.channel?.sendMessage(
-						globalStrings.errors.genericErrorWithTrace(exc)
+						await translate(
+							"en_GB",
+							"errors.genericErrorWithTrace",
+							{
+								error: exc,
+							}
+						)
 					);
 					handleError(msg, exc, "error");
 				} catch {

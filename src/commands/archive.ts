@@ -2,7 +2,12 @@ import { Message } from "revolt.js";
 
 import { globalStrings } from "../i18n/en_GB";
 
-import { handleError, sleep, uploadFile } from "../modules/functions";
+import {
+	handleError,
+	sleep,
+	translate,
+	uploadFile,
+} from "../modules/functions";
 
 // node builtins
 import { writeFile, readFile, unlink } from "fs/promises";
@@ -44,10 +49,10 @@ export async function run(msg: Message, language: string, args: string[]) {
 		// create file
 		await writeFile(dir, json);
 		botMsg?.edit({
-			content: globalStrings.archive.archiveComplete(
-				msg.channel_id,
-				filename
-			),
+			content: await translate(language, "archive.archiveComplete", {
+				id: msg.channel_id,
+				filename: filename,
+			}),
 		});
 
 		const archiveBuffer = await readFile(resolvedDir);
@@ -67,7 +72,9 @@ export async function run(msg: Message, language: string, args: string[]) {
 		await unlink(dir);
 	} catch (err) {
 		msg.channel?.sendMessage(
-			globalStrings.errors.genericErrorWithTrace(err)
+			await translate(language, "errors.genericErrorWithTrace", {
+				error: err,
+			})
 		);
 		handleError(msg, err, "error");
 	}

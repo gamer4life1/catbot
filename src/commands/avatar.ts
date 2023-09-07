@@ -2,7 +2,7 @@ import { Message } from "revolt.js";
 
 import { globalStrings } from "../i18n/en_GB";
 
-import { handleError } from "../modules/functions";
+import { handleError, translate } from "../modules/functions";
 
 export const name = "avatar";
 export const aliases = ["av"];
@@ -38,7 +38,9 @@ export async function run(msg: Message, language: string, args: string[]) {
 		});
 	} catch (err) {
 		msg.channel?.sendMessage(
-			globalStrings.errors.genericErrorWithTrace(err)
+			await translate(language, "errors.genericErrorWithTrace", {
+				error: err,
+			})
 		);
 		handleError(msg, err, "error");
 	}

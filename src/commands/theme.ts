@@ -3,9 +3,9 @@ import { Message } from "revolt.js";
 import { globalStrings } from "../i18n/en_GB";
 
 import {
-	getLanguage,
 	handleError,
 	sleep,
+	translate,
 	uploadFile,
 } from "../modules/functions";
 
@@ -25,9 +25,6 @@ export const serverOnly = false;
 
 export async function run(msg: Message, language: string, args: string[]) {
 	try {
-		const localStrings =
-			language !== "en_GB" ? await getLanguage(msg.author?._id!) : null;
-
 		const botMsg = await msg.channel?.sendMessage(
 			globalStrings.theme.converting
 		);
@@ -94,7 +91,9 @@ export async function run(msg: Message, language: string, args: string[]) {
 		// create file
 		await writeFile(dir, toml);
 		botMsg?.edit({
-			content: globalStrings.theme.themeReady(filename),
+			content: await translate(language, "theme.themeReady", {
+				filename: filename,
+			}),
 		});
 
 		const archiveBuffer = await readFile(resolvedDir);
@@ -114,7 +113,9 @@ export async function run(msg: Message, language: string, args: string[]) {
 		await unlink(dir);
 	} catch (err) {
 		msg.channel?.sendMessage(
-			globalStrings.errors.genericErrorWithTrace(err)
+			await translate(language, "errors.genericErrorWithTrace", {
+				error: err,
+			})
 		);
 		handleError(msg, err, "error");
 	}

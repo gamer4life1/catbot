@@ -3,7 +3,7 @@ import { exec } from "child_process";
 
 import { globalStrings } from "../i18n/en_GB";
 
-import { getLanguage, handleError, setConfig } from "../modules/functions.js";
+import { handleError, setConfig, translate } from "../modules/functions.js";
 import path from "path";
 import { readdir, unlink } from "fs/promises";
 
@@ -15,8 +15,6 @@ export const serverOnly = false;
 
 export async function run(msg: Message, language: string, args: string[]) {
 	try {
-		const localStrings =
-			language !== "en_GB" ? await getLanguage(msg.author?._id!) : null;
 		switch (args[0]) {
 			case "-p":
 				await msg.channel?.sendMessage("pulling changes...");
@@ -70,7 +68,9 @@ export async function run(msg: Message, language: string, args: string[]) {
 		}
 	} catch (err) {
 		msg.channel?.sendMessage(
-			globalStrings.errors.genericErrorWithTrace(err)
+			await translate(language, "errors.genericErrorWithTrace", {
+				error: err,
+			})
 		);
 		handleError(msg, err, "error");
 	}

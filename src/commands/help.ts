@@ -1,5 +1,3 @@
-import { Message } from "revolt.js";
-
 import { RBMessage } from "../types/client.js";
 
 import { globalStrings } from "../i18n/en_GB.js";
@@ -10,6 +8,7 @@ import {
 	getCommand,
 	getUserConfig,
 	handleError,
+	translate,
 } from "../modules/functions.js";
 
 export const name = "help";
@@ -60,7 +59,9 @@ export async function run(msg: RBMessage, language: string, args: string[]) {
 		});
 	} catch (err) {
 		msg.channel?.sendMessage(
-			globalStrings.errors.genericErrorWithTrace(err)
+			await translate(language, "errors.genericErrorWithTrace", {
+				error: err,
+			})
 		);
 		handleError(msg, err, "error");
 	}

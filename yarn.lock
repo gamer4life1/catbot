@@ -46,26 +46,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/git-rev-sync@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@types/git-rev-sync@npm:2.0.0"
-  checksum: db70d3a58577cfc67431954f00af8fed4f38a1754872624998ffe6b524208c6491c278063ca2cbd08247e3b194bc74c6c85ec3e0e19a1aa8d1de987b50ad122c
+"@types/git-rev-sync@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@types/git-rev-sync@npm:2.0.2"
+  checksum: 24d8e9573cffad57b6809b0e60917f01d70d1577d5cc027ef1fe557ae2968f827e38836750dd9acbe2339ec9d9d7faa05584b8a162665706085943ade2601a7b
   languageName: node
   linkType: hard
 
-"@types/iarna__toml@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@types/iarna__toml@npm:2.0.2"
+"@types/iarna__toml@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "@types/iarna__toml@npm:2.0.5"
   dependencies:
     "@types/node": "*"
-  checksum: 43bb44e4e241f16cf6b4352328e4221dbc77893ed1c854ccc62f028a2ad7565a4499d5cdc8a98ef2456c3bf392b40191e2f796ca89abfe8d1e1444a7b9b983a6
+  checksum: 5611ce5624e7cbe040e7a06d0e4e8af9eb6a0eb473642192ebc1ea98cc2f70b3be42e02d395fc0d3bf1cb26e01dfc0f8eed3513fbb8094f4d04e2de7c399e8f1
   languageName: node
   linkType: hard
 
-"@types/node-polyglot@npm:^2":
-  version: 2.4.2
-  resolution: "@types/node-polyglot@npm:2.4.2"
-  checksum: ca015b78ef83cce8e471557b2f24d73c7589e00edfe19315f16a12f1dabf209abc1df47a051933085b22918d4eb97d87212a6ae9048b98bf86ad3e1529cb96dd
+"@types/node-polyglot@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "@types/node-polyglot@npm:2.5.0"
+  checksum: 62a666a2d5d0fc56afd8f99352e07a9e59994a476f2dfb6f0d3fd2b35430eada91c94dfa519a930305e09bb8619d235ea32ef4b2cd139c2ce027f502ffa7b739
   languageName: node
   linkType: hard
 
@@ -76,19 +76,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.17.14":
-  version: 18.17.14
-  resolution: "@types/node@npm:18.17.14"
-  checksum: f96ce1e588426a26cf82440193084f8bbab47bfb3c2e668cf174095f99ce808a20654b2137448c7e88cfd7b6c2b8521ffb6f714f521b3502ac595a0df0bff679
+"@types/node@npm:^18.19.8":
+  version: 18.19.8
+  resolution: "@types/node@npm:18.19.8"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: fa291495d6157a9d9393b4c3bdbf1ce12a8f661dc9da6a4fa19bcdb19af1c62bb8dbf7fb66ae135f29cd788b618e9845b83e9c47edcf39f0953a8561fdacd9a3
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^8.5.5":
-  version: 8.5.5
-  resolution: "@types/ws@npm:8.5.5"
+"@types/ws@npm:^8.5.10":
+  version: 8.5.10
+  resolution: "@types/ws@npm:8.5.10"
   dependencies:
     "@types/node": "*"
-  checksum: d00bf8070e6938e3ccf933010921c6ce78ac3606696ce37a393b27a9a603f7bd93ea64f3c5fa295a2f743575ba9c9a9fdb904af0f5fe2229bf2adf0630386e4a
+  checksum: 3ec416ea2be24042ebd677932a462cf16d2080393d8d7d0b1b3f5d6eaa4a7387aaf0eefb99193c0bfd29444857cf2e0c3ac89899e130550dc6c14ada8a46d25e
   languageName: node
   linkType: hard
 
@@ -170,14 +172,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "axios@npm:1.5.0"
+"axios@npm:^1.6.5":
+  version: 1.6.5
+  resolution: "axios@npm:1.6.5"
   dependencies:
-    follow-redirects: ^1.15.0
+    follow-redirects: ^1.15.4
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: e7405a5dbbea97760d0e6cd58fecba311b0401ddb4a8efbc4108f5537da9b3f278bde566deb777935a960beec4fa18e7b8353881f2f465e4f2c0e949fead35be
+  checksum: e28d67b2d9134cb4608c44d8068b0678cfdccc652742e619006f27264a30c7aba13b2cd19c6f1f52ae195b5232734925928fb192d5c85feea7edd2f273df206d
   languageName: node
   linkType: hard
 
@@ -253,10 +255,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.11.9":
-  version: 1.11.9
-  resolution: "dayjs@npm:1.11.9"
-  checksum: a4844d83dc87f921348bb9b1b93af851c51e6f71fa259604809cfe1b49d1230e6b0212dab44d1cb01994c096ad3a77ea1cf18fa55154da6efcc9d3610526ac38
+"dayjs@npm:^1.11.10":
+  version: 1.11.10
+  resolution: "dayjs@npm:1.11.10"
+  checksum: a6b5a3813b8884f5cd557e2e6b7fa569f4c5d0c97aca9558e38534af4f2d60daafd3ff8c2000fed3435cfcec9e805bcebd99f90130c6d1c5ef524084ced588c4
   languageName: node
   linkType: hard
 
@@ -277,10 +279,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.3.1":
-  version: 16.3.1
-  resolution: "dotenv@npm:16.3.1"
-  checksum: 15d75e7279018f4bafd0ee9706593dd14455ddb71b3bcba9c52574460b7ccaf67d5cf8b2c08a5af1a9da6db36c956a04a1192b101ee102a3e0cf8817bbcf3dfd
+"dotenv@npm:^16.3.2":
+  version: 16.3.2
+  resolution: "dotenv@npm:16.3.2"
+  checksum: 917b27eeb654b95846484009326b1c52af7a7c25f7b09e2939ed49de8f98cb9895dcc04f13a39cdb078d247985e21147311ccb5bfbf2fd151afb20fa8f96de15
   languageName: node
   linkType: hard
 
@@ -1112,22 +1114,22 @@ __metadata:
   resolution: "rexbot@workspace:."
   dependencies:
     "@iarna/toml": ^2.2.5
-    "@types/git-rev-sync": ^2.0.0
-    "@types/iarna__toml": ^2.0.2
-    "@types/node": ^18.17.14
-    "@types/node-polyglot": ^2
-    "@types/ws": ^8.5.5
-    axios: ^1.5.0
+    "@types/git-rev-sync": ^2.0.2
+    "@types/iarna__toml": ^2.0.5
+    "@types/node": ^18.19.8
+    "@types/node-polyglot": ^2.5.0
+    "@types/ws": ^8.5.10
+    axios: ^1.6.5
     commonjs-extension-resolution-loader: ^0.1.0
-    dayjs: ^1.11.9
-    dotenv: ^16.3.1
+    dayjs: ^1.11.10
+    dotenv: ^16.3.2
     form-data: ^4.0.0
     git-rev-sync: ^3.0.2
     node-polyglot: ^2.5.0
     revchiver: ^0.6.0
     revolt.js: 6.0.19
     tsc-watch: ^6.0.4
-    typescript: 5.2.2
+    typescript: 5.3.3
     ulid: ^2.3.0
   languageName: unknown
   linkType: soft
@@ -1347,13 +1349,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.2.2":
-  version: 5.2.2
-  resolution: "typescript@npm:5.2.2"
+"typescript@npm:5.3.3":
+  version: 5.3.3
+  resolution: "typescript@npm:5.3.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 7912821dac4d962d315c36800fe387cdc0a6298dba7ec171b350b4a6e988b51d7b8f051317786db1094bd7431d526b648aba7da8236607febb26cf5b871d2d3c
+  checksum: 2007ccb6e51bbbf6fde0a78099efe04dc1c3dfbdff04ca3b6a8bc717991862b39fd6126c0c3ebf2d2d98ac5e960bcaa873826bb2bb241f14277034148f41f6a2
   languageName: node
   linkType: hard
 
@@ -1367,13 +1369,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@5.2.2#~builtin<compat/typescript>":
-  version: 5.2.2
-  resolution: "typescript@patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=bda367"
+"typescript@patch:typescript@5.3.3#~builtin<compat/typescript>":
+  version: 5.3.3
+  resolution: "typescript@patch:typescript@npm%3A5.3.3#~builtin<compat/typescript>::version=5.3.3&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 07106822b4305de3f22835cbba949a2b35451cad50888759b6818421290ff95d522b38ef7919e70fb381c5fe9c1c643d7dea22c8b31652a717ddbd57b7f4d554
+  checksum: f61375590b3162599f0f0d5b8737877ac0a7bc52761dbb585d67e7b8753a3a4c42d9a554c4cc929f591ffcf3a2b0602f65ae3ce74714fd5652623a816862b610
   languageName: node
   linkType: hard
 
@@ -1405,6 +1407,13 @@ __metadata:
     has-symbols: ^1.0.3
     which-boxed-primitive: ^1.0.2
   checksum: b7a1cf5862b5e4b5deb091672ffa579aa274f648410009c81cca63fed3b62b610c4f3b773f912ce545bb4e31edc3138975b5bc777fc6e4817dca51affb6380e9
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~5.26.4":
+  version: 5.26.5
+  resolution: "undici-types@npm:5.26.5"
+  checksum: 3192ef6f3fd5df652f2dc1cd782b49d6ff14dc98e5dced492aa8a8c65425227da5da6aafe22523c67f035a272c599bb89cfe803c1db6311e44bed3042fc25487
   languageName: node
   linkType: hard
 

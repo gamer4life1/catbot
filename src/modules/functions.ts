@@ -9,8 +9,6 @@ import { BotFramework } from "./framework";
 
 // external libs
 import dayjs from "dayjs";
-import axios from "axios";
-import FormData from "form-data";
 import Polyglot from "node-polyglot";
 
 const polyglot = new Polyglot({
@@ -262,19 +260,23 @@ export async function translate(
  */
 export async function uploadFile(
 	client: Client,
-	file: Buffer,
+	buffer: Buffer,
 	filename: string
 ): Promise<string> {
 	const autumnURL = client.configuration?.features.autumn.url;
 
-	let data = new FormData();
-	data.append("file", file, { filename: filename });
+	const blob = new Blob([buffer]);
 
-	const headers = data.getHeaders();
-	let req = await axios.post(`${autumnURL}/attachments`, data, {
-		headers: headers,
+	const file = new File([blob], filename);
+
+	let data = new FormData();
+	data.append("file", file);
+
+	let req = await fetch(`${autumnURL}/attachments`, {
+		method: "POST",
+		body: data,
 	});
-	return (req.data as any)["id"] as string;
+	return (await req.json())["id"] as string;
 }
 
 /**

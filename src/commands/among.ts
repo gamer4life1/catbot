@@ -1,8 +1,6 @@
 import { Message } from "revolt.js";
 import { exec } from "child_process";
 
-import { globalStrings } from "../i18n/en_GB";
-
 import { handleError, setConfig, translate } from "../modules/functions.js";
 import path from "path";
 import { readdir, unlink } from "fs/promises";
@@ -20,7 +18,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 				await msg.channel?.sendMessage("pulling changes...");
 				exec("git pull && yarn install"); // install new deps if they're specified
 				break;
-			case "-s":
+			case "-s": {
 				if (!args[1]) {
 					return msg.channel?.sendMessage(
 						"what do you want me to say???"
@@ -28,8 +26,8 @@ export async function run(msg: Message, language: string, args: string[]) {
 				}
 				const message = args.slice(1).join(" ");
 				return msg.channel?.sendMessage(message);
-				break;
-			case "-ca":
+			}
+			case "-ca": {
 				msg.channel?.sendMessage("cleaning up archive files...");
 				const __dirname = path.resolve();
 				const folder = path.resolve(__dirname, "data/archives");
@@ -41,6 +39,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 				return msg.channel?.sendMessage(
 					"cleaned up archive files :tada:"
 				);
+			}
 			case "-c":
 				if (!args[1]) {
 					return msg.channel?.sendMessage(
@@ -53,7 +52,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 					);
 				}
 				try {
-					await setConfig(msg.author?._id!, args[1], args[2]);
+					await setConfig(msg.author_id, args[1], args[2]);
 					return msg.channel?.sendMessage(
 						`\`${args[1]}\` has been set to \`${args[2]}\``
 					);

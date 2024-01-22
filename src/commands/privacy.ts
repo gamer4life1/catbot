@@ -12,20 +12,30 @@ export const developer = false;
 export const serverOnly = false;
 
 export async function run(msg: Message, language: string, args: string[]) {
+	async function getValues() {
+		const config = await getUserConfig(msg.author_id);
+		if (config) {
+			const values = Object.entries(config);
+			const formattedValues = [];
+			for (const v of values) {
+				formattedValues.push(`${v[0]}: ${v[1]}`);
+			}
+			return formattedValues;
+		} else return "noConfig";
+	}
+
 	try {
 		const showConfig = args[0] === "viewconfig";
-		async function getValues() {
-			const config = await getUserConfig(msg.author?._id!);
-			if (config) {
-				const values = Object.entries(config);
-				let formattedValues = [];
-				for (const v of values) {
-					formattedValues.push(`${v[0]}: ${v[1]}`);
-				}
-				return formattedValues;
-			} else return "noConfig";
-		}
-		const config = await getValues();
+		const config = showConfig ? await getValues() : "noConfig";
+
+		const configString =
+			config === "noConfig" ? config : config.join(",\n    ");
+		const finalConfigString = showConfig
+			? configString !== "noConfig"
+				? `Here's your config:\n\`\`\`\n{\n    ${configString}\n}\n\`\`\``
+				: "*You have no saved config.*"
+			: "You can view your config info by passing the `viewconfig` argument.";
+
 		msg.channel
 			?.sendMessage(`*For the purposes of this message, "we" refers to RexBot's operator(s) - I (Rexo) and the bot's host (Error) are the only current operators.*
 	\nWe care about your privacy and only store data that is necessary for the bot to function.
@@ -36,17 +46,8 @@ export async function run(msg: Message, language: string, args: string[]) {
 	\n### Archive files
 	\nArchive files (produced by running \`rex!archive\`) are stored for a maximum of 30 minutes before being deleted - this is to ensure that, if the bot fails to send the archive file, it can still be retrieved for the archiver. We do not look at the contents of archive files.
 	\n### COMING SOON: User config
-	\nWe are currently working on adding a user config system. Your config information will be stored in an individual file. Only those who explicitly set or change their user config have config files - other users will use the default configuration for the bot. ${
-		showConfig
-			? `\n\n${
-					config !== "noConfig"
-						? `Here's your config:\n\`\`\`\n${config?.join(
-								"\n"
-						  )}\n\`\`\``
-						: "*You have no saved config.*"
-			  }`
-			: "You can view your config info by passing the `viewconfig` arg."
-	}`);
+	\nWe are currently working on adding a user config system. Your config information will be stored in an individual file. Only those who explicitly set or change their user config have config files - other users will use the default configuration for the bot.
+	\n${finalConfigString}`);
 	} catch (err) {
 		msg.channel?.sendMessage(
 			await translate(language, "errors.genericErrorWithTrace", {

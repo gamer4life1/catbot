@@ -10,7 +10,7 @@ export const description = "Shuts down the bot.";
 export const developer = true;
 export const serverOnly = false;
 
-export async function run(msg: Message, language: string, args: string[]) {
+export async function run(msg: Message, language: string) {
 	try {
 		await msg.channel?.sendMessage(globalStrings.shutdown.response);
 		process.exit();

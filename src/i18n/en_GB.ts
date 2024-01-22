@@ -71,7 +71,7 @@ export const globalStrings = {
 		genericError: "Something went wrong :flushed:",
 		genericErrorWithTrace:
 			"Something went wrong! Please report the following to RexBot's devs:\n```js\n{{error}}\n```",
-		genericErrorWithTraceConsole: (trace: any) => {
+		genericErrorWithTraceConsole: (trace: unknown) => {
 			return `Something went wrong while executing the above command - here's the trace:\n\n${trace}`;
 		},
 		couldNotFetchData: "There was an issue fetching the data.",

@@ -1,8 +1,5 @@
 import { RBMessage } from "../types/client.js";
 
-import { globalStrings } from "../i18n/en_GB.js";
-
-import { Command } from "../types/command.js";
 import { config } from "../config.js";
 import {
 	getCommand,
@@ -22,7 +19,7 @@ export const serverOnly = false;
 export async function run(msg: RBMessage, language: string, args: string[]) {
 	try {
 		const input = args.join(" ");
-		const userConfig = await getUserConfig(msg.author?._id!);
+		const userConfig = await getUserConfig(msg.author_id);
 		const authorIsDev = userConfig?.developer || false;
 		const title = `${msg.client.user?.username} Help\n`;
 		let content = "";
@@ -37,7 +34,7 @@ export async function run(msg: RBMessage, language: string, args: string[]) {
 			content +=
 				"*You can view the bot's privacy policy by running rex!privacy.*";
 		} else {
-			const cmd: Command = getCommand(input, msg.client.framework);
+			const cmd = getCommand(input, msg.client.framework);
 			if (!cmd) {
 				colour = "var(--error)";
 				content =

@@ -1,11 +1,11 @@
-import { Client, Message } from "revolt.js";
+import type { Client, Message } from "revolt.js";
 
-import { Command, Context } from "../types/command";
+import type { Command, Context } from "../types/command";
 
 import { globalStrings } from "../i18n/en_GB";
 
 import type { ServerConfig, UserConfig } from "../types/config";
-import { BotFramework } from "./framework";
+import type { BotFramework } from "./framework";
 
 // external libs
 import dayjs from "dayjs";
@@ -26,7 +26,7 @@ export function generateTimestamp() {
 
 export async function handleError(
 	msg: Message, // needed for the client
-	error: any,
+	error: unknown,
 	type: "warning" | "error"
 ) {
 	const loggingChannelId = process.env.LOGGING_CHANNEL ?? null;
@@ -54,7 +54,7 @@ export async function isValidContext(
 	language: string,
 	bot: BotFramework
 ): Promise<Context> {
-	let values: Context = { command: null, args: [], canExecute: false };
+	const values: Context = { command: null, args: [], canExecute: false };
 
 	// ignore system messages
 	if (!msg.content) return values;
@@ -74,13 +74,13 @@ export async function isValidContext(
 
 	const args = msg.content.slice(bot.prefix.length).split(" ");
 	const commandName = args.shift();
-	const command: Command = getCommand(commandName as string, bot);
+	const command = getCommand(commandName as string, bot) ?? null;
 	values.command = command;
 	values.args = args;
 
 	if (!command) return values;
 
-	const issues = await commandChecks(msg, command, isDev, language, bot);
+	const issues = await commandChecks(msg, command, isDev, language);
 
 	if (!issues) values.canExecute = true;
 	return values;
@@ -90,8 +90,7 @@ export async function commandChecks(
 	msg: Message,
 	command: Command,
 	isDev: boolean,
-	language: string,
-	bot: BotFramework
+	language: string
 ) {
 	if (command.developer && !isDev) {
 		msg.channel?.sendMessage(
@@ -151,11 +150,13 @@ async function getConfig(
  * @param key The config key to change
  * @param value The new value
  */
-export async function setConfig(id: string, key: any, value: any) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function setConfig(id: string, key: any, value: unknown) {
 	try {
-		let originalConfig = (await getConfig(id)) as any;
+		const originalConfig = await getConfig(id);
 		if (originalConfig) {
-			let newConfig = originalConfig;
+			const newConfig = originalConfig;
+			// @ts-expect-error shhh...
 			newConfig[key] = value;
 			const newConfigAsJSON = JSON.stringify(newConfig, null, 4);
 			try {
@@ -208,7 +209,7 @@ export async function getServerConfig(
 async function getLanguage(
 	id: string,
 	isLanguage?: boolean
-): Promise<any | null> {
+): Promise<unknown | null> {
 	try {
 		const config = await getUserConfig(id);
 		const rawData = isLanguage
@@ -232,6 +233,7 @@ async function getLanguage(
 export async function translate(
 	language: string,
 	string: string,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	data?: any
 ): Promise<string> {
 	try {
@@ -269,10 +271,10 @@ export async function uploadFile(
 
 	const file = new File([blob], filename);
 
-	let data = new FormData();
+	const data = new FormData();
 	data.append("file", file);
 
-	let req = await fetch(`${autumnURL}/attachments`, {
+	const req = await fetch(`${autumnURL}/attachments`, {
 		method: "POST",
 		body: data,
 	});

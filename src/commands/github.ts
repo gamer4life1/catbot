@@ -28,9 +28,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 		} else {
 			// prepare arg for usage
 			const rawInput = args.join(" ");
-			// prettier messes with the regex, so...
-			// prettier-ignore
-			const regex = new RegExp("http(s)?:\/\/github.com\/")
+			const regex = new RegExp("http(s)?://github.com/");
 			const input = rawInput.replace(regex, "");
 
 			// urls
@@ -39,7 +37,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 
 			// fetch repo
 			const rawData = await fetch(url);
-			const repo = (await rawData.json()) as any;
+			const repo = await rawData.json();
 			if (repo) {
 				if (!repo.name)
 					return msg.channel?.sendMessage({
@@ -54,7 +52,14 @@ export async function run(msg: Message, language: string, args: string[]) {
 						],
 					});
 				const rawCommitData = await fetch(commitsUrl);
-				const commits = (await rawCommitData.json()) as any;
+				const commit = (await rawCommitData.json())[0];
+
+				// splitting the code up so prettier and eslint stop fighting
+				const sha = commit.sha.slice(0, 7);
+				const commitInfo = commit
+					? `\`${sha}\`([link](${commit.html_url}))`
+					: "*This repository has no commits.*";
+
 				msg.channel?.sendMessage({
 					content: " ",
 					embeds: [
@@ -70,13 +75,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 								? `\n\`${repo.topics.join("`, `")}\``
 								: "*This repository has no topics.*"
 						}
-						\n**Latest commit**\n${
-							commits[0]
-								? `\`${commits[0].sha.slice(0, 7)}\`([link](${
-										commits[0].html_url
-								  }))`
-								: "*This repository has no commits.*"
-						}
+						\n**Latest commit**\n${commitInfo}
 						\n**Stars**\n${repo.stargazers_count} ${
 								repo.stargazers_count === 1 ? "star" : "stars"
 							}

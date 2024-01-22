@@ -18,39 +18,40 @@ export const attributes = {
 	serverOnly: false,
 }; // for future use :eyes:
 
-export async function run(msg: Message, language: string, args: string[]) {
-	try {
-		/**
-		 * Returns the relevant emoji for the provided mode.
-		 * @param mode String (the mode's internal ID)
-		 */
-		function getModeIcon(mode: string) {
-			switch (mode) {
-				// Splat Zones
-				case "AREA":
-					return ":01GDBWYA6ZX4S9HT5FJ5RQRSKF:";
-				// Clam Blitz
-				case "CLAM":
-					return ":01GDBWZJ2N4G2MXGT1KRX6RV9M:";
-				// Rainmaker
-				case "GOAL":
-					return ":01GDBWZXNW1STKFE7ZE7S54R70:";
-				// Tower Control
-				case "LOFT":
-					return ":01GDBX0BP3EYNWT62SMQJNPXVX:";
-				// Default
-				default:
-					return "";
-			}
+export async function run(msg: Message, language: string) {
+	/**
+	 * Returns the relevant emoji for the provided mode.
+	 * @param mode String (the mode's internal ID)
+	 */
+	function getModeIcon(mode: string) {
+		switch (mode) {
+			// Splat Zones
+			case "AREA":
+				return ":01GDBWYA6ZX4S9HT5FJ5RQRSKF:";
+			// Clam Blitz
+			case "CLAM":
+				return ":01GDBWZJ2N4G2MXGT1KRX6RV9M:";
+			// Rainmaker
+			case "GOAL":
+				return ":01GDBWZXNW1STKFE7ZE7S54R70:";
+			// Tower Control
+			case "LOFT":
+				return ":01GDBX0BP3EYNWT62SMQJNPXVX:";
+			// Default
+			default:
+				return "";
 		}
-		const url = `https://splatoon3.ink/data/schedules.json`;
+	}
+
+	try {
+		const url = "https://splatoon3.ink/data/schedules.json";
 		const options = {
 			headers: {
 				"User-Agent": globalStrings.splatoon.userAgent,
 			},
 		};
 		const rawData = await fetch(url, options);
-		const data = ((await rawData.json()) as any).data;
+		const data = (await rawData.json()).data;
 		if (data) {
 			// base objects (including start/end times)
 			const turfWarBase = data.regularSchedules.nodes[0]; // regular battle (turf war)

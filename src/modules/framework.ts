@@ -2,7 +2,6 @@ import { Client, Message } from "revolt.js";
 
 import { commands } from "./commands.js";
 import { statuses } from "../config/statuses.js";
-import { globalStrings } from "../i18n/en_GB.js";
 import {
 	handleError,
 	generateTimestamp,
@@ -71,7 +70,7 @@ export class BotFramework {
 						const index =
 							Math.floor(Math.random() * statuses.length + 1) - 1;
 						const newStatus = statuses[index];
-						await client.api.patch(`/users/@me`, {
+						await client.api.patch("/users/@me", {
 							status: newStatus,
 						});
 					} catch (err) {

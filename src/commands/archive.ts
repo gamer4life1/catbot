@@ -23,7 +23,7 @@ export const description = globalStrings.archive.description;
 export const developer = false;
 export const serverOnly = false;
 
-export async function run(msg: Message, language: string, args: string[]) {
+export async function run(msg: Message, language: string) {
 	try {
 		const botMsg = await msg.channel?.sendMessage(
 			globalStrings.archive.fetchingInfo
@@ -34,9 +34,9 @@ export async function run(msg: Message, language: string, args: string[]) {
 		await botMsg?.edit({ content: globalStrings.archive.creatingFile });
 		const rawjson = JSON.stringify(archiveData, null, 4);
 
-		// remove empty pair of curly brackets ({}); also, just in case...
-		// prettier-ignore
-		const regex = new RegExp("        {},\n");
+		// remove empty pair of curly brackets ({})
+		// eslint-disable-next-line no-control-regex
+		const regex = new RegExp(" {7}{},\n");
 		const json = rawjson.replace(regex, "");
 
 		// define filenames

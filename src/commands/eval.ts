@@ -1,7 +1,5 @@
 import { Message } from "revolt.js";
 
-import { globalStrings } from "../i18n/en_GB";
-
 import { handleError, translate } from "../modules/functions";
 
 import * as util from "util";

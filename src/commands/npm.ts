@@ -29,7 +29,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 				args.join(" ")
 			)}`;
 			const rawData = await fetch(url);
-			const data = (await rawData.json()) as any;
+			const data = await rawData.json();
 			if (data) {
 				if (data.total === 0)
 					return msg.channel?.sendMessage({
@@ -45,21 +45,21 @@ export async function run(msg: Message, language: string, args: string[]) {
 					});
 
 				const pkg = data.results[0].package;
+
+				const keywords = pkg.keywords?.join("`, `");
 				msg.channel?.sendMessage({
 					content: " ",
 					embeds: [
 						{
 							title: await translate(language, "npm.npmTitle", {
-								package: pkg.name,
+								name: pkg.name,
 							}),
 							description: `${
 								pkg.description ??
 								globalStrings.npm.pkgNoDescription
 							}\n${
 								pkg.keywords
-									? `\n**Keywords**\n\`${pkg.keywords.join(
-											"`, `"
-									  )}\`\n`
+									? `\n**Keywords**\n\`${keywords}\`\n`
 									: ""
 							}\n${globalStrings.npm.latestVer}\nv${
 								pkg.version

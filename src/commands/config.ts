@@ -10,13 +10,13 @@ export const description = "[WIP] View, edit or clear your saved config.";
 export const developer = true;
 export const serverOnly = false;
 
-export async function run(msg: Message, language: string, args: string[]) {
+export async function run(msg: Message, language: string) {
 	try {
 		const botMsg = await msg.channel?.sendMessage(
 			await translate(language, "ping.pong")
 		);
 		botMsg?.edit({
-			content: "",
+			content: " ",
 			embeds: [
 				{
 					title: await translate(language, "ping.pong"),

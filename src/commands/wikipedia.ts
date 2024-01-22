@@ -39,7 +39,7 @@ export async function run(msg: Message, language: string, args: string[]) {
 			};
 			try {
 				const rawData = await fetch(url, options);
-				const data = (await rawData.json()) as any;
+				const data = await rawData.json();
 				if (data) {
 					// article not found, return error message
 					if (data.type === notFoundType)
